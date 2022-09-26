@@ -1,0 +1,38 @@
+# FROM ubuntu
+# RUN apt-get update -y && \
+#     apt-get install -y python-pip python-dev
+
+# COPY src/requirements.txt /app/requirements.txt
+
+# WORKDIR /app
+
+# RUN pip install -r src/requirements 
+
+# COPY . /app
+
+# ENTRYPOINT ["python"]
+
+# CMD ["app.py"]
+
+FROM python:3.9.7-slim-buster
+
+RUN pip install --upgrade pip
+RUN pip install --upgrade setuptools
+RUN pip install mysqlclient
+
+RUN mkdir dvc_pipeline
+
+RUN mkdir dvc_pipeline/src
+COPY src/ dvc_pipeline/src
+
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+
+COPY params.yaml dvc_pipeline/params.yaml
+COPY dvc.yaml dvc_pipeline/dvc.yaml
+
+
+WORKDIR /dvc_pipeline
+RUN dvc init --no-scm
+RUN dvc repro
+

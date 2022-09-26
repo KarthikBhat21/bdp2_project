@@ -1,0 +1,5 @@
+extract:
+  num_tweets: 2000
+prepare:
+  seed: 3005643
+  split: 0.30

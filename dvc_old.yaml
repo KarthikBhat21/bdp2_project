@@ -1,0 +1,19 @@
+stages:
+  extract:
+    cmd: python src/data_extraction.py
+    deps:
+    - src/data_extraction.py
+    params:
+    - extract.num_tweets
+    outs:
+    - Data/extracted
+  prepare:
+    cmd: python src/prepare.py Data/extracted
+    deps:
+    - src/prepare.py
+    - Data/extracted
+    params:
+    - prepare.seed
+    - prepare.split
+    outs:
+    - Data/prepared

@@ -1,0 +1,17 @@
+data_extraction:
+  num_tweets: 200
+# featurize:
+#   split: 0.50
+#   seed: 20170428
+SVMtrainEvaluate:
+  seed: 26105111
+  n_est: 30
+  min_split: 3
+  split: 0.05
+  max_features: 5000
+LogistictrainEvaluate:
+  seed: 26105111
+  n_est: 30
+  min_split: 3
+  split: 0.05
+  max_features: 5000

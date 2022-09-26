@@ -1,0 +1,65 @@
+stages:
+  data_extraction:
+    cmd: python src/data_extraction.py
+    deps:
+    - src/data_extraction.py
+    params:
+    - data_extraction.num_tweets
+    outs:
+    - data/extracted
+  prepare:
+    cmd: python src/prepare.py data/extracted/extracted_data.csv
+    deps:
+    - data/extracted/extracted_data.csv
+    - src/prepare.py
+    outs:
+    - data/prepared
+  featurize:
+    cmd: python src/featurization.py data/prepared data/features
+    deps:
+    - data/prepared
+    - src/featurization.py
+    # params:
+    # - featurize.split
+    # - featurize.seed
+    outs:
+    - data/features
+  SVMtrainEvaluate:
+    cmd: python src/SVMtrainEvaluate.py data/features SVMmodel.pkl
+    deps:
+    - data/features
+    - src/SVMtrainEvaluate.py
+    params:
+    - SVMtrainEvaluate.seed
+    - SVMtrainEvaluate.n_est
+    - SVMtrainEvaluate.min_split
+    - SVMtrainEvaluate.split
+    - SVMtrainEvaluate.max_features
+    outs:
+    - SVMmodel.pkl
+  LogistictrainEvaluate:
+    cmd: python src/LogistictrainEvaluate.py data/features Logisticmodel.pkl
+    deps:
+    - data/features
+    - src/LogistictrainEvaluate.py
+    params:
+    - LogistictrainEvaluate.seed
+    - LogistictrainEvaluate.n_est
+    - LogistictrainEvaluate.min_split
+    - LogistictrainEvaluate.split
+    - LogistictrainEvaluate.max_features
+    outs:
+    - Logisticmodel.pkl  
+  # evaluate:
+  #   cmd: python src/evaluate.py model.pkl data/training_testing
+  #   deps:
+  #     - model.pkl
+  #     - src/evaluate.py
+  #     - data/training_testing
+  #   metrics:
+  #     - evaluation.json:
+  #         cache: false
+  #   plots:
+  #     - evaluation/plots/confusion_matrix.json
+  #     - evaluation/plots/precision_recall.json
+  #     - evaluation/plots/roc.json
